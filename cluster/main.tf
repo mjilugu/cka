@@ -67,7 +67,7 @@ resource "aws_security_group" "allow-ssh" {
         from_port        = 22
         to_port          = 22
         protocol         = "tcp"
-        cidr_blocks      = [aws_vpc.cka.cidr_block, "185.192.16.0/24"]
+        cidr_blocks      = [aws_vpc.cka.cidr_block, "0.0.0.0/0"] # allow all for now
         # ipv6_cidr_blocks = [aws_vpc.cka.ipv6_cidr_block]
     }
 
@@ -76,7 +76,7 @@ resource "aws_security_group" "allow-ssh" {
         from_port        = 0
         to_port          = 0
         protocol         = "-1"
-        cidr_blocks      = [aws_vpc.cka.cidr_block, "185.192.16.0/24"]
+        cidr_blocks      = [aws_vpc.cka.cidr_block, "0.0.0.0/0"] # allow all for now
     }
 
     egress {
@@ -97,8 +97,8 @@ resource "aws_security_group" "allow-ssh" {
 #
 
 resource "aws_instance" "cka-master-1" {
-    ami = "ami-0bf84c42e04519c85"
-    instance_type = "t2.micro"
+    ami = var.server-ami
+    instance_type = var.server-instance-type
     key_name = "cka"
     subnet_id = aws_subnet.cka-public.id
     vpc_security_group_ids = [ aws_security_group.allow-ssh.id ]
@@ -109,8 +109,8 @@ resource "aws_instance" "cka-master-1" {
 }
 
 resource "aws_instance" "cka-worker-1" {
-    ami = "ami-0bf84c42e04519c85"
-    instance_type = "t2.micro"
+    ami = var.server-ami
+    instance_type = var.server-instance-type
     key_name = "cka"
     subnet_id = aws_subnet.cka-public.id
     vpc_security_group_ids = [ aws_security_group.allow-ssh.id ]
@@ -121,8 +121,8 @@ resource "aws_instance" "cka-worker-1" {
 }
 
 resource "aws_instance" "cka-worker-2" {
-    ami = "ami-0bf84c42e04519c85"
-    instance_type = "t2.micro"
+    ami = var.server-ami
+    instance_type = var.server-instance-type
     key_name = "cka"
     subnet_id = aws_subnet.cka-public.id
     vpc_security_group_ids = [ aws_security_group.allow-ssh.id ]
